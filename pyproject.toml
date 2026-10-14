@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nextnote"
+version = "0.1.0"
+description = "Monophonic music generation reusing the Markov core from nexttoken"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "music21",
+    "mido",
+]
+# NOTE: `nexttoken` is a local, not-yet-published package. Install it first as
+# an editable dependency, otherwise it cannot be resolved from PyPI:
+#     pip install -e ../nexttoken
+#     pip install -e .
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+nextnote-experiment = "nextnote.experiment:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

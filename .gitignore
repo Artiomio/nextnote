@@ -1,0 +1,21 @@
+# Data, models and generated output are never committed: data/, models/,
+# output/ and *.mid are all ignored below. Empty directories are kept in git
+# with .gitkeep files, so the folders themselves cannot be ignored wholesale.
+data/raw/jsb_chorales/
+data/processed/*
+!data/processed/.gitkeep
+models/*
+!models/.gitkeep
+output/*
+!output/.gitkeep
+*.mid
+*.midi
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
