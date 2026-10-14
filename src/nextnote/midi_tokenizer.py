@@ -1,7 +1,7 @@
 """Monophonic (soprano) note stream <-> discrete hashable tokens.
 
 A musical token is deliberately just a plain hashable Python object so that
-the universal Markov core in :mod:`nexttoken` can consume it without knowing
+the universal Markov core in :mod:`nexttoken_core` can consume it without knowing
 anything about music:
 
 * note (absolute):    ``(midi_pitch, duration_steps)``   e.g. ``(60, 4)``

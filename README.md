@@ -1,10 +1,13 @@
 # nextnote
 
 Monophonic music generation built on top of the universal Markov core from
-[`nexttoken`](../nexttoken). This is an *extension* of the `nexttoken` idea, not
-a rewrite: the n-th order Markov chain (counting, normalization,
-`np.random.choice`, context shifting) is **imported from `nexttoken`**, never
-duplicated here.
+[`nexttoken-core`](https://github.com/Artiomio/nexttoken-core). This is an
+*extension* of the original
+[`nexttoken`](https://github.com/Artiomio/nexttoken) idea, not a rewrite: the
+n-th order Markov chain (counting, normalization, `np.random.choice`, context
+shifting) is **imported from `nexttoken_core`**, never duplicated here. The
+original `nexttoken` repo is kept unchanged for teaching; the reusable core
+lives in `nexttoken-core`.
 
 `nextnote` adds only the music-specific parts:
 
@@ -75,12 +78,26 @@ Two representations are available:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ../nexttoken   # the shared Markov core (install first!)
-pip install -e .              # nextnote itself
+pip install -e .              # installs nexttoken-core from GitHub automatically
 ```
 
-`nexttoken` must be installed first: it is a local package that is not published
-on PyPI. `nextnote` imports `MarkovChain` from it — see
+`nextnote` depends on the shared Markov core
+[`nexttoken-core`](https://github.com/Artiomio/nexttoken-core) (import name
+`nexttoken_core`), declared in `pyproject.toml` as a git dependency:
+
+```text
+nexttoken-core @ git+https://github.com/Artiomio/nexttoken-core.git@main
+```
+
+For local development, install the sibling checkout as an editable dependency
+instead:
+
+```bash
+pip install -e ../nexttoken-core
+pip install -e . --no-deps
+```
+
+`nextnote` imports `MarkovChain` from `nexttoken_core` — see
 `src/nextnote/experiment.py`.
 
 ## Download the corpus
@@ -154,7 +171,7 @@ are kept with `.gitkeep` files.
 ## Tests
 
 ```bash
-pytest                    # run from nextnote/ (nexttoken tests too: cd ../nexttoken && pytest)
+pytest                    # run from nextnote/
 ```
 
 ## Limitations of a monophonic Markov model

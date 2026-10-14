@@ -1,4 +1,4 @@
-"""nextnote: generate monophonic music with the Markov core from ``nexttoken``."""
+"""nextnote: generate monophonic music with the Markov core from ``nexttoken_core``."""
 
 from .midi_tokenizer import (
     ABS,

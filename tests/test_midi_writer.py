@@ -46,8 +46,8 @@ def test_out_of_range_pitch_is_clamped(tmp_path):
 
 
 def test_tokens_to_midi_pipeline(tmp_path):
-    """End-to-end: fit the nexttoken Markov core, generate, write, validate."""
-    from nexttoken import MarkovChain
+    """End-to-end: fit the nexttoken_core Markov core, generate, write, validate."""
+    from nexttoken_core import MarkovChain
 
     events = [(60, 1.0), (62, 1.0), (64, 1.0), (65, 1.0)]
     tokens = MidiTokenizer(representation="absolute", order=1).encode(events)

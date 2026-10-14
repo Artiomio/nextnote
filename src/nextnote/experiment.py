@@ -18,7 +18,7 @@ import pathlib
 import sys
 import time
 
-from nexttoken import MarkovChain
+from nexttoken_core import MarkovChain
 
 from .dataset import (
     default_raw_dir,
