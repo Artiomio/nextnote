@@ -46,6 +46,24 @@ def test_interval_roundtrip():
     assert decoded == [(60, 4), (62, 2), (60, 2), (None, 1), (65, 4)]
 
 
+def test_interval_abs_token_resets_pitch_after_restart():
+    tokens = [
+        BOS,
+        (ABS, 60, 4),
+        (2, 4),
+        (ABS, 72, 4),
+        (-2, 4),
+        EOS,
+    ]
+
+    assert decode_tokens(tokens, "interval") == [
+        (60, 4),
+        (62, 4),
+        (72, 4),
+        (70, 4),
+    ]
+
+
 def test_bos_padding_count_matches_order():
     events = [(60, 1.0), (62, 1.0)]
     tokens = MidiTokenizer(representation="absolute", order=3).encode(events)
