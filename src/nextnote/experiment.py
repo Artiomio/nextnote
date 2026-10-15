@@ -77,7 +77,11 @@ def run_experiment(args):
     corpus_events = load_corpus_events(raw_dir, token_stats)
     print(f"Parsed {len(corpus_events)} chorales in {time.time() - started:.2f} s")
 
-    min_tokens = args.min_tokens if args.min_tokens is not None else args.length
+    min_tokens = (
+        args.min_tokens
+        if args.min_tokens is not None
+        else (3 * args.length) // 4
+    )
     summaries = []
     reports = []
 
@@ -98,6 +102,7 @@ def run_experiment(args):
             initial_context=[BOS] * order,
             max_tokens=args.length,
             dead_end_strategy="restart",
+            restart_context=[BOS] * order,
             stop_tokens=[EOS],
             min_tokens=min_tokens,
         )
@@ -154,15 +159,15 @@ def run_experiment(args):
     print("Models")
     header = (
         f"  {'order':>5} {'tokens':>8} {'vocab':>6} {'contexts':>9} "
-        f"{'dead-ends':>9} {'fit(s)':>8} {'generated':>9}"
+        f"{'dead-ends':>9} {'clamped':>8} {'fit(s)':>8} {'generated':>9}"
     )
     print(header)
     for summary in summaries:
         print(
             f"  {summary['order']:>5} {summary['musical_tokens']:>8} "
             f"{summary['vocab']:>6} {summary['contexts']:>9} "
-            f"{summary['dead_ends']:>9} {summary['fit_time']:>8.2f} "
-            f"{summary['generated']:>9}"
+            f"{summary['dead_ends']:>9} {summary['clamped']:>8} "
+            f"{summary['fit_time']:>8.2f} {summary['generated']:>9}"
         )
 
     print()
@@ -197,7 +202,7 @@ def build_arg_parser():
         "--min-tokens",
         type=int,
         default=None,
-        help="Minimum length before EOS may stop generation (default: --length)",
+        help="Minimum length before EOS may stop generation (default: 75%% of --length)",
     )
     return parser
 
