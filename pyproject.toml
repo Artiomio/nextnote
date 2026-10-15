@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nextnote"
-version = "0.1.0"
+version = "0.1.1"
 description = "Monophonic music generation reusing the Markov core from nexttoken-core"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -14,7 +14,7 @@ dependencies = [
     "mido",
     # The shared Markov core. Older nexttoken (github.com/Artiomio/nexttoken) is
     # kept unchanged for teaching; the reusable core lives in nexttoken-core.
-    "nexttoken-core @ git+https://github.com/Artiomio/nexttoken-core.git@main",
+    "nexttoken-core @ git+https://github.com/Artiomio/nexttoken-core.git@f618273b3a44663750e7ef9748bcc99f5296c4a2",
 ]
 
 [project.optional-dependencies]
