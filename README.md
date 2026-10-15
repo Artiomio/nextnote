@@ -89,10 +89,12 @@ pip install -e .              # installs nexttoken-core from GitHub automaticall
 
 `nextnote` depends on the shared Markov core
 [`nexttoken-core`](https://github.com/Artiomio/nexttoken-core) (import name
-`nexttoken_core`), declared in `pyproject.toml` as a git dependency:
+`nexttoken_core`), declared in `pyproject.toml` as a git dependency pinned to the tested core
+commit, so reinstalling the same `nextnote` revision does not silently change
+the Markov implementation:
 
 ```text
-nexttoken-core @ git+https://github.com/Artiomio/nexttoken-core.git@main
+nexttoken-core @ git+https://github.com/Artiomio/nexttoken-core.git@f618273b3a44663750e7ef9748bcc99f5296c4a2
 ```
 
 For local development, install the sibling checkout as an editable dependency
