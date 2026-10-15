@@ -69,9 +69,15 @@ one chorale and the first token of the next one is **never** created.
 
 Two representations are available:
 
-* `absolute` — notes by absolute MIDI pitch (used for the first experiment);
-* `interval` — notes by interval from the previous note (available for later
-  comparison; needs a reference pitch, default 60).
+* `absolute` — notes by absolute MIDI pitch (used for the first baseline);
+* `interval` — notes by interval from the previous sounding note. The first
+  note of every fragment is an explicit `("ABS", pitch, duration)` anchor, so
+  the same melodic contour in different keys shares transition statistics.
+
+Rests do not reset the previous sounding pitch. A dead-end restart is pinned to
+the `BOS` context; in interval mode this makes the next fragment begin with a
+fresh `ABS` anchor instead of silently continuing interval arithmetic from an
+unrelated training context.
 
 ## Install
 
@@ -124,6 +130,10 @@ python -m nextnote.experiment \
     --output-dir output
 ```
 
+By default `EOS` is masked until 75% of `--length` has been generated
+(150 tokens for a length of 200). After that the piece may end naturally; the
+hard limit is still `--length`. Override this with `--min-tokens`.
+
 The command:
 
 1. checks that the corpus exists (and otherwise tells you to run the downloader);
@@ -146,6 +156,30 @@ output/bach_markov_order_5.mid
 Each file is a Standard MIDI File with a single track, Acoustic Grand Piano
 (program 0), 90 BPM, real `note_on`/`note_off` events accounting for token
 durations and rests.
+
+For an absolute-vs-interval comparison, keep the outputs separate so the
+second run does not overwrite the first:
+
+```bash
+python -m nextnote.experiment \
+    --representation absolute \
+    --orders 1 3 5 \
+    --length 200 \
+    --seed 42 \
+    --output-dir output/absolute
+
+python -m nextnote.experiment \
+    --representation interval \
+    --orders 1 3 5 \
+    --length 200 \
+    --seed 42 \
+    --output-dir output/interval
+```
+
+The model table reports vocabulary size, unique contexts, dead-end restarts and
+`clamped` pitches. In interval mode, a non-zero clamped count is useful
+diagnostic information: it means cumulative intervals drifted outside MIDI
+pitch range `0..127`.
 
 Alongside every `.mid` a debug dump of the generated tokens is written:
 
@@ -182,7 +216,8 @@ pytest                    # run from nextnote/
 * A Markov chain has **no** notion of global musical form, phrase structure or a
   tonal centre; the interval representation in particular can drift in pitch
   (out-of-range pitches are clamped to `0..127`).
-* Dead-end contexts are handled by a `restart` strategy (jump to a context that
-  is known to have a continuation). This is not a real backoff: the model does
-  not build statistics for shorter contexts.
+* Dead-end contexts are handled by a `restart` strategy. `nextnote` restarts
+  specifically from `BOS`; in interval mode that also re-establishes an
+  absolute pitch anchor. This is not a real backoff: the model does not build
+  statistics for shorter contexts.
 * There is no train/validation split yet.
