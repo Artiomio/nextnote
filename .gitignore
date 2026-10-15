@@ -1,15 +1,24 @@
-# Data, models and generated output are never committed: data/, models/,
-# output/ and *.mid are all ignored below. Empty directories are kept in git
+# Corpora and models are never committed. Empty directories are kept in git
 # with .gitkeep files, so the folders themselves cannot be ignored wholesale.
 data/raw/jsb_chorales/
 data/processed/*
 !data/processed/.gitkeep
 models/*
 !models/.gitkeep
+
+# Published results: only the shareable MIDI + MP3 files under output/ are
+# committed. Audio renders (*.wav), token dumps and anything else stay out.
 output/*
 !output/.gitkeep
-*.mid
-*.midi
+!output/absolute/
+!output/interval/
+output/absolute/*
+output/interval/*
+!output/absolute/*.mid
+!output/absolute/*.mp3
+!output/interval/*.mid
+!output/interval/*.mp3
+*.wav
 
 # Python
 __pycache__/
